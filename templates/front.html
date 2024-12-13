@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yon Num Converter</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #2c2c2c; /* Dark background */
+            color: #ffffff; /* Light text */
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 400px;
+            background-color: #4a4a4a; /* Darker container */
+            border-radius: 15px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+            padding: 20px; /* Reduced padding */
+            text-align: center;
+        }
+        h1 {
+            margin-bottom: 10px; /* Reduced margin */
+            color: #ffffff; /* White title color */
+            font-size: 2em;
+        }
+        input {
+            width: 100%;
+            height: 50px;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            resize: none;
+            font-size: 1em;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 15px; /* Reduced margin */
+            background-color: #f0f0f0; /* Light textarea background */
+            color: #333; /* Dark text for textarea */
+        }
+        button {
+            padding: 12px 20px;
+            font-size: 1.1em;
+            background-color: #63E6BE; /* Button color */
+            border: none;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin: 5px; /* Space between buttons */
+            width: 100%; /* Full width for buttons */
+        }
+        button:hover {
+            background-color: #52b99c; /* Darker button on hover */
+        }
+        .output {
+            margin-top: 15px; /* Reduced margin */
+            padding: 15px;
+            background-color: #f8f9fa; /* Light output background */
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            min-height: 50px;
+            color: #333; /* Dark text for output */
+            font-size: 1.1em;
+            text-align: left;
+        }
+        .button-grid {
+            display: flex;
+            justify-content: space-between; /* Space buttons evenly */
+            align-items: flex-start; /* Align items at the start */
+            margin-top: 10px; /* Reduced margin */
+        }
+        .button-column {
+            display: flex;
+            flex-direction: column; /* Stack buttons vertically */
+            width: 48%; /* Width for each column */
+        }
+        #me{
+            font-size: xx-small;
+            color: #52b99c;
+        }
+    </style>
+    <script>
+        function handleButtonClick(button) {
+            const inputField = document.querySelector('input[name="number"]');
+            const conversionType = button.getAttribute('data-conversion-type');
+
+            if (inputField.value === '') {
+                reverseConversion(button);
+            } else {
+                // Set the conversion type in a hidden input before submitting
+                const form = button.form;
+                const hiddenInput = document.createElement('input');
+                hiddenInput.type = 'hidden';
+                hiddenInput.name = 'conversion_type';
+                hiddenInput.value = conversionType;
+                form.appendChild(hiddenInput);
+                form.submit();
+            }
+        }
+
+        function reverseConversion(button) {
+            const conversionMapping = {
+                'decimal_to_binary': 'binary_to_decimal',
+                'binary_to_decimal': 'decimal_to_binary',
+                'decimal_to_octal': 'octal_to_decimal',
+                'octal_to_decimal': 'decimal_to_octal',
+                'decimal_to_hex': 'hex_to_decimal',
+                'hex_to_decimal': 'decimal_to_hex',
+                'binary_to_octal': 'octal_to_binary',
+                'octal_to_binary': 'binary_to_octal',
+                'binary_to_hex': 'hex_to_binary',
+                'hex_to_binary': 'binary_to_hex',
+                'octal_to_hex': 'hex_to_octal',
+                'hex_to_octal': 'octal_to_hex'
+            };
+
+            const currentType = button.getAttribute('data-conversion-type');
+            const newType = conversionMapping[currentType];
+            button.setAttribute('data-conversion-type', newType);
+            button.innerText = newType.replace('_', ' ').replace(/^\w/, (c) => c.toUpperCase());
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome! <span id="me">Made by YAT</span></h1>
+        <p>Enter a number and select a conversion type:</p>
+        <form method="POST">
+            <input type="text" name="number" placeholder="Enter your number..." required />
+            <div class="button-grid">
+                <div class="button-column">
+                    <button type="button" data-conversion-type="decimal_to_binary" onclick="handleButtonClick(this)">Decimal to Binary</button>
+                    <button type="button" data-conversion-type="decimal_to_octal" onclick="handleButtonClick(this)">Decimal to Octal</button>
+                    <button type="button" data-conversion-type="decimal_to_hex" onclick="handleButtonClick(this)">Decimal to Hexadecimal</button>
+                </div>
+                <div class="button-column">
+                    <button type="button" data-conversion-type="binary_to_octal" onclick="handleButtonClick(this)">Binary to Octal</button>
+                    <button type="button" data-conversion-type="binary_to_hex" onclick="handleButtonClick(this)">Binary to Hexadecimal</button>
+                    <button type="button" data-conversion-type="octal_to_hex" onclick="handleButtonClick(this)">Octal to Hexadecimal</button>
+                </div>
+            </div>
+        </form>
+        <div class="output">
+            {% if result %}
+                Result: {{ result }}
+            {% else %}
+                Result will appear here...
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
