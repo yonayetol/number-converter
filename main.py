@@ -37,6 +37,3 @@ def index():
             result = oct(int(number, 16))[2:]  # Convert hexadecimal to octal
 
     return render_template("front.html", result=result, conversion_type=conversion_type)
-
-if __name__ == '__main__':
-    app.run(debug=True)
